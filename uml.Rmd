@@ -61,6 +61,10 @@ The diagram has been generated as a local image file[^TODO1]. We can now include
 ![simple state machine](`r paste0(diagname,".png")`)
 
 
+### Soure code
+The souce code for this paper can be found [here](https://github.com/dheater/knitr_plantuml_demo)
+
+
 [^TODO1]: I would like to figure out how avoid generating the intermediate *.uml* and *.png* files.
 
 [1]: http://www.r-project.org/ "R"
