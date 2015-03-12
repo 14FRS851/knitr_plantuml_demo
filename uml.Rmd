@@ -61,6 +61,32 @@ The diagram has been generated as a local image file[^TODO1]. We can now include
 ![simple state machine](`r paste0(diagname,".png")`)
 
 
+To avoid the intermediate file, we could write them into temporary folder. A new function will be helpful to create multiple diagram.
+
+```{r generate_state_diagram_fun, results='asis'}
+plantuml <- function(uml, text)
+{
+    filename <- tempfile()
+    uml_filename <- paste0(filename, ".uml")
+    write(uml, uml_filename)
+    system2("java", paste0(" -jar plantuml.jar ", uml_filename))
+    cat(paste0('![', text, '](', filename, '.png)'))
+}
+plantuml(teststate, 'Simple state machine')
+
+```
+
+```{r generate_diagram2, results='asis'}
+sequenc_state <- '
+@startuml
+Bob->Alice : hello
+@enduml'
+plantuml(sequenc_state, 'Simple sequence diagram')
+
+```
+
+
+
 ### Soure code
 The souce code for this paper can be found [here](https://github.com/dheater/knitr_plantuml_demo)
 
