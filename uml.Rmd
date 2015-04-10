@@ -85,6 +85,24 @@ plantuml(sequenc_state, 'Simple sequence diagram')
 
 ```
 
+A slight changes of this function will give us capacity to control the figure size
+
+```{r generate_state_diagram_fun2, fig.width=4, fig.height=5}
+plantuml2 <- function(uml, text)
+{
+    filename <- tempfile()
+    uml_filename <- paste0(filename, ".uml")
+    write(uml, uml_filename)
+    system2("java", paste0(" -jar plantuml.jar ", uml_filename))
+    library(png)
+    library(grid)
+    img <- readPNG(paste0(filename, '.png'))
+    grid.raster(img)
+}
+plantuml2(teststate, 'Simple state machine')
+```
+
+
 
 
 ### Soure code
