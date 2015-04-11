@@ -8,7 +8,7 @@ output:
 
 
 ## Problem Statement
-Software designs are commonly produced in text editors such as Microsoft Word that is supplemented through the inclusion of diagrams produced in drawing tools such as Visio or a [UML][5] modeling tool.
+Software designs are commonly produced in text editors such as Microsoft Word and supplemented through the inclusion of diagrams produced in drawing tools such as Visio or a [UML][5] modeling tool.
 
 ### Tools Used
 
@@ -20,7 +20,7 @@ Software designs are commonly produced in text editors such as Microsoft Word th
 
 [knitr][2] processes [R][1] [markdown][7] files using the [R][1] programming language to generate a [markdown][7] file. That [markdown][7] file is then run through [Pandoc][4] to generate a final report on one of many formats such as HTML, PDF, or Word.
 
-[knitr][2] evolved mainly to support Reproducible Research - the notion that *all* of the steps [of a data aalysis and the code used to produce that analysis should be clearly documented so that the analysis should be reporoducible by other people.
+[knitr][2] evolved mainly to support Reproducible Research - the notion that *all* of the steps of a data aalysis and the code used to produce that analysis should be clearly documented so that the analysis should be reporoducible by other people.
 
 #### PlantUML
 
@@ -36,7 +36,7 @@ In addition, developers often spend a substantial portion of thier time, not imp
 This document shows an example of how to use the tools describe above to produce human readable software design documents in plain ASCII text. This approach allows for the use of text-based version control systems that are highly capable and well understood by the software development community. The proposed approach embeds the PlantUML source code for [UML][5] diagrams within the document. The [knitr][2] package of [R][1] is then used to "weave" a [markdown][7] file that is then converted to one of the many publication quality output file formats supported by [Pandoc][4].
 
 ## Demonstration.
-For the puposes of this demonstration I am echoing all of the embedded source code into the generated file. For a design document to be published you may wish to hide this code using knitr's *echo=FALSE* chunk option.
+For the puposes of this demonstration I am echoing all of the embedded source code into the generated file. For a design document to be published you may wish to hide this code using knitr's `echo=FALSE` chunk option.
 
 First we create an [R][1] variable that contains the [PlantUML][3] source code.
 ```{r define_uml_state_diagram}
@@ -56,7 +56,7 @@ write(teststate, paste0(diagname, ".uml"))
 system2("java", paste0(" -jar plantuml.jar ", paste0(diagname, ".uml")))
 ```
 
-The diagram has been generated as a local image file[^TODO1]. We can now include the diagram in the document.
+The diagram has been generated as a local image file. We can now include the diagram in the document.
 
 ![simple state machine](`r paste0(diagname,".png")`)
 
@@ -72,26 +72,27 @@ plantuml <- function(uml, text)
     system2("java", paste0(" -jar plantuml.jar ", uml_filename))
     cat(paste0('![', text, '](', filename, '.png)'))
 }
-plantuml(teststate, 'Simple state machine')
 
+plantuml(teststate, 'Simple state machine')
 ```
 
 ```{r generate_diagram2, results='asis'}
-sequenc_state <- '
+testseq <- '
 @startuml
 Bob->Alice : hello
 @enduml'
-plantuml(sequenc_state, 'Simple sequence diagram')
+plantuml(testseq, 'Simple sequence diagram')
 
 ```
 
-A slight changes of this function will give us capacity to control the figure size
+A slight changes of this function will give us capacity to control the figure size by specifying `fig.width and fig.height`.
 
-```{r generate_state_diagram_fun2, fig.width=4, fig.height=5}
+```{r generate_state_diagram_fun2}
 plantuml2 <- function(uml, text)
 {
     filename <- tempfile()
     uml_filename <- paste0(filename, ".uml")
+
     write(uml, uml_filename)
     system2("java", paste0(" -jar plantuml.jar ", uml_filename))
     library(png)
@@ -99,17 +100,19 @@ plantuml2 <- function(uml, text)
     img <- readPNG(paste0(filename, '.png'))
     grid.raster(img)
 }
-plantuml2(teststate, 'Simple state machine')
 ```
 
+
+```{r generate_big_state_diagram, fig.width=4, fig.height=5}
+plantuml2(teststate, 'Simple state machine')
+```
 
 
 
 ### Soure code
 The souce code for this paper can be found [here](https://github.com/dheater/knitr_plantuml_demo)
 
-
-[^TODO1]: I would like to figure out how avoid generating the intermediate *.uml* and *.png* files.
+*Thanks to Bangyou Zheng for sections on how to avoid the intermediate files and resize images.*
 
 [1]: http://www.r-project.org/ "R"
 [2]: http://yihui.name/knitr/ "knitr"
@@ -118,3 +121,4 @@ The souce code for this paper can be found [here](https://github.com/dheater/kni
 [5]: http://en.wikipedia.org/wiki/Unified_Modeling_Language "UML"
 [6]: http://www.graphviz.org/ "Graphviz"
 [7]: http://en.wikipedia.org/wiki/Markdown "Markdown"
+
